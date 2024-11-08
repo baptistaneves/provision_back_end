@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ProvisionPadel.Api.props" />
+</Project>

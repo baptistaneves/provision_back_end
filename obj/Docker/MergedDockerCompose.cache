@@ -1,0 +1,90 @@
+name: dockercompose1718307831489078558
+services:
+  evolution-api:
+    container_name: evolution_api
+    image: atendai/evolution-api
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "8080"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: volume
+        source: evolution_instances
+        target: /evolution/instances
+        volume: {}
+  provisiondb:
+    container_name: provisiondb
+    environment:
+      POSTGRES_DB: ProvisionDb
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    image: postgres
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    restart: always
+    volumes:
+      - type: volume
+        source: postgres_provision
+        target: /var/lib/postgresql/data
+        volume: {}
+  provisionpadel.api:
+    build:
+      context: C:\Baptista Neves\ucall\ProvisionPadel\ProvisionPadel
+      dockerfile: src/ProvisionPadel.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ASPNETCORE_HTTPS_PORTS: "8081"
+    image: provisionpadelapi
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8080
+        published: "6000"
+        protocol: tcp
+      - mode: ingress
+        target: 8081
+        published: "6060"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\dannn\AppData\Roaming/Microsoft/UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\dannn\AppData\Roaming/ASP.NET/Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+  rediscache:
+    container_name: rediscache
+    image: redis
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 6379
+        published: "6379"
+        protocol: tcp
+    restart: always
+networks:
+  default:
+    name: dockercompose1718307831489078558_default
+volumes:
+  evolution_instances:
+    name: dockercompose1718307831489078558_evolution_instances
+  postgres_provision:
+    name: dockercompose1718307831489078558_postgres_provision

@@ -1,0 +1,19 @@
+{
+  "Version": 1,
+  "Hash": "fh6e75yBkny2M86QdP/uZDdMededCySZ5CugS4c8Aek=",
+  "Source": "ProvisionPadel.Api",
+  "BasePath": "_content/ProvisionPadel.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ProvisionPadel.Api\\wwwroot",
+      "Source": "ProvisionPadel.Api",
+      "ContentRoot": "C:\\Baptista Neves\\ucall\\ProvisionPadel\\ProvisionPadel\\src\\ProvisionPadel.Api\\wwwroot\\",
+      "BasePath": "_content/ProvisionPadel.Api",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": []
+}

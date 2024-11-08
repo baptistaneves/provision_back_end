@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  provisiondb:
+    image: postgres
+
+  rediscache:
+    image: redis
+  
+  evolution-api:
+    image: atendai/evolution-api
+
+  provisionpadel.api:
+    image: ${DOCKER_REGISTRY-}provisionpadelapi
+    build:
+      context: .
+      dockerfile: src/ProvisionPadel.Api/Dockerfile
+
+volumes:
+ postgres_provision:
+ evolution_instances:
