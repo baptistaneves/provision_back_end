@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Baptista Neves\\ucall\\ProvisionPadel\\ProvisionPadel\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj": {}
+    "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj": {}
   },
   "projects": {
-    "C:\\Baptista Neves\\ucall\\ProvisionPadel\\ProvisionPadel\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj": {
+    "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Baptista Neves\\ucall\\ProvisionPadel\\ProvisionPadel\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
+        "projectUniqueName": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
         "projectName": "ProvisionPadel.Api",
-        "projectPath": "C:\\Baptista Neves\\ucall\\ProvisionPadel\\ProvisionPadel\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
-        "packagesPath": "C:\\Users\\dannn\\.nuget\\packages\\",
-        "outputPath": "C:\\Baptista Neves\\ucall\\ProvisionPadel\\ProvisionPadel\\src\\ProvisionPadel.Api\\obj\\",
+        "projectPath": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
+        "packagesPath": "C:\\Users\\Baptista Neves\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\src\\ProvisionPadel.Api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\dannn\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Baptista Neves\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -39,6 +39,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -143,7 +148,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

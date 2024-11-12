@@ -1,7 +1,16 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\ProvisionPadel\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\.env||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.env||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7682C222-3E8C-4256-A65D-A5263B3B0688}|docker-compose.dcproj|c:\\users\\baptista neves\\desktop\\arquivos\\ucall\\projectos\\provision_back_end\\docker-compose.override.yml||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{7682C222-3E8C-4256-A65D-A5263B3B0688}|docker-compose.dcproj|solutionrelative:docker-compose.override.yml||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
@@ -9,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -22,6 +31,32 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "docker-compose.override.yml",
+              "DocumentMoniker": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\docker-compose.override.yml",
+              "RelativeDocumentMoniker": "docker-compose.override.yml",
+              "ToolTip": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\docker-compose.override.yml",
+              "RelativeToolTip": "docker-compose.override.yml",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003775|",
+              "WhenOpened": "2024-11-11T20:40:04.745Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".env",
+              "DocumentMoniker": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\.env",
+              "RelativeDocumentMoniker": ".env",
+              "ToolTip": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\.env",
+              "RelativeToolTip": ".env",
+              "ViewState": "AQIAAPkAAAAAAAAAAAAAAAIBAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-11-11T20:39:36.998Z",
+              "EditorCaption": ""
             }
           ]
         }
