@@ -1,42 +1,49 @@
-﻿using System.IO;
+﻿namespace ProvisionPadel.Api.Features.CameraNVRAPIIntegration.ExtractLast30Seconds;
 
-namespace ProvisionPadel.Api.Features.CameraNVRAPIIntegration.ExtractLast30Seconds;
-
-public record ExtractLast30SecondsResult(FileStream Stream);
+public record ExtractLast30SecondsResult(bool IsSuccess);
 
 public record ExtractLast30SecondsCommand(string Name) : ICommand<ExtractLast30SecondsResult>;
 
 public class ExtractLast30SecondsHandler
-    (IConfiguration configuration) : ICommandHandler<ExtractLast30SecondsCommand, ExtractLast30SecondsResult>
+    (IEvolutionApiService evolutionApiService,
+     IOptions<Fmpeg> ffmpeg) : ICommandHandler<ExtractLast30SecondsCommand, ExtractLast30SecondsResult>
 {
-    private readonly IConfiguration _configuration = configuration;
+    private readonly Fmpeg _ffmpeg = ffmpeg.Value;
+    private readonly IEvolutionApiService _evolutionApiService = evolutionApiService;
+
     public async Task<ExtractLast30SecondsResult> Handle(ExtractLast30SecondsCommand command, CancellationToken cancellationToken)
     {
-        var filePath = Path.Combine(_configuration["FFmpeg:VideoDirectory"]!, $"{command.Name}.mp4");
+        var filePath = Path.Combine(_ffmpeg.VideoDirectory, $"{command.Name}.mp4");
 
-        var fileOutPut = Path.Combine(_configuration["FFmpeg:VideoDirectory"]!, command.Name + $"_last30seconds_{Guid.NewGuid()}.mp4");
+        var fileOutPut = Path.Combine(_ffmpeg.VideoDirectory, command.Name + $"_last30seconds_{Guid.NewGuid()}.mp4");
 
         var ffmpegArgs = $"-sseof -30 -i \"{filePath}\" -t 30 -c:v copy -an {fileOutPut}";
 
-        var ffmpegPath = _configuration["FFmpeg:FFmpegPath"];
+        Process.Start($"{_ffmpeg.FFmpegPath}", $"{ffmpegArgs}");
 
-        Process.Start($"{ffmpegPath}", $"{ffmpegArgs}");
+        await Task.Delay(1000);
 
-        var stream = DownloadVideo(fileOutPut);
+        var media = ConvertToBase64(fileOutPut);
 
-        return new ExtractLast30SecondsResult(stream);
-    }
+        var isSuccess = await _evolutionApiService.SendVideo("244922686669", media);
 
-    private FileStream DownloadVideo(string fileOutPut)
-    {
-        return new FileStream(fileOutPut, FileMode.Open, FileAccess.Read);
+        if (isSuccess) DeleteVideo(fileOutPut);
+
+        return new ExtractLast30SecondsResult(isSuccess);
     }
 
     private void DeleteVideo(string fileOutPut)
     {
-        if (System.IO.File.Exists(fileOutPut))
+        if(File.Exists(fileOutPut))
         {
-            System.IO.File.Delete(fileOutPut);
+            File.Delete(fileOutPut);
         }
+    }
+
+    private string ConvertToBase64(string fileOutPut)
+    {
+        byte[] fileBytes = File.ReadAllBytes(fileOutPut);
+
+        return Convert.ToBase64String(fileBytes);
     }
 }

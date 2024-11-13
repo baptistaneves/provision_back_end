@@ -8665,23 +8665,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Baptista Neves\\.nuget\\packages\\": {},
+    "C:\\Users\\dannn\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
+      "projectUniqueName": "C:\\Baptista Neves\\ucall\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
       "projectName": "ProvisionPadel.Api",
-      "projectPath": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
-      "packagesPath": "C:\\Users\\Baptista Neves\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Baptista Neves\\Desktop\\Arquivos\\ucall\\projectos\\provision_back_end\\src\\ProvisionPadel.Api\\obj\\",
+      "projectPath": "C:\\Baptista Neves\\ucall\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
+      "packagesPath": "C:\\Users\\dannn\\.nuget\\packages\\",
+      "outputPath": "C:\\Baptista Neves\\ucall\\provision_back_end\\src\\ProvisionPadel.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Baptista Neves\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dannn\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -8703,11 +8703,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -8812,7 +8807,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.102/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
@@ -8821,7 +8816,7 @@
       "code": "NU1608",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: Microsoft.CodeAnalysis.CSharp.Workspaces 4.5.0 requires Microsoft.CodeAnalysis.Common (= 4.5.0) but version Microsoft.CodeAnalysis.Common 4.7.0 was resolved.",
+      "message": "Versão detectada do pacote fora da restrição de dependência: Microsoft.CodeAnalysis.CSharp.Workspaces 4.5.0 requer Microsoft.CodeAnalysis.Common (= 4.5.0), mas a versão Microsoft.CodeAnalysis.Common 4.7.0 foi resolvida.",
       "libraryId": "Microsoft.CodeAnalysis.Common",
       "targetGraphs": [
         "net8.0"
@@ -8831,7 +8826,7 @@
       "code": "NU1608",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: Microsoft.CodeAnalysis.CSharp.Workspaces 4.5.0 requires Microsoft.CodeAnalysis.CSharp (= 4.5.0) but version Microsoft.CodeAnalysis.CSharp 4.7.0 was resolved.",
+      "message": "Versão detectada do pacote fora da restrição de dependência: Microsoft.CodeAnalysis.CSharp.Workspaces 4.5.0 requer Microsoft.CodeAnalysis.CSharp (= 4.5.0), mas a versão Microsoft.CodeAnalysis.CSharp 4.7.0 foi resolvida.",
       "libraryId": "Microsoft.CodeAnalysis.CSharp",
       "targetGraphs": [
         "net8.0"
@@ -8841,7 +8836,7 @@
       "code": "NU1608",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: Microsoft.CodeAnalysis.Workspaces.Common 4.5.0 requires Microsoft.CodeAnalysis.Common (= 4.5.0) but version Microsoft.CodeAnalysis.Common 4.7.0 was resolved.",
+      "message": "Versão detectada do pacote fora da restrição de dependência: Microsoft.CodeAnalysis.Workspaces.Common 4.5.0 requer Microsoft.CodeAnalysis.Common (= 4.5.0), mas a versão Microsoft.CodeAnalysis.Common 4.7.0 foi resolvida.",
       "libraryId": "Microsoft.CodeAnalysis.Common",
       "targetGraphs": [
         "net8.0"

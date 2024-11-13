@@ -34,3 +34,4 @@ global using ProvisionPadel.Api.Data.Models;
 global using System.IdentityModel.Tokens.Jwt;
 global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using ProvisionPadel.Api.Dtos;
+global using System.Text.Json;

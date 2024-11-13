@@ -5,19 +5,24 @@ public class HikvisionHttpClient
     public HttpClient Client { get; }
     public string Rtsp { get; }
 
-    public HikvisionHttpClient(IConfiguration configuration)
+    private readonly HikvisionNVR _hikvisionNVR;
+
+    public HikvisionHttpClient(IOptions<HikvisionNVR> hikvisionNVR,
+                               IConfiguration configuration)
     {
         Client = new HttpClient();
-        Rtsp = configuration["HikvisionNVR:Rtsp"]!;
+        _hikvisionNVR = hikvisionNVR.Value;
+
+        Rtsp = _hikvisionNVR.Rtsp;
 
         var handler = new HttpClientHandler
         {
-            Credentials = new System.Net.NetworkCredential(configuration["HikvisionNVR:Username"], configuration["HikvisionNVR:Password"])
+            Credentials = new System.Net.NetworkCredential(_hikvisionNVR.Username, _hikvisionNVR.Password)
         };
 
         Client = new HttpClient(handler)
         {
-            BaseAddress = new Uri(configuration["HikvisionNVR:BaseUrl"]!)
+            BaseAddress = new Uri(_hikvisionNVR.BaseUrl)
         };
     }
 }

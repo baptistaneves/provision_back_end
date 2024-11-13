@@ -10,9 +10,7 @@ public class ExtractLast30SecondsEndpoint : ICarterModule
 
             var result = await sender.Send(command, cancellationToken);
 
-            var stream = result.Stream;
-
-            return Results.File(stream, "video/mp4", $"{fileName}_last30seconds.mp4");
+            return Results.Ok(result);
         })
         .WithName("ExtractLast30Seconds")
         .Produces(StatusCodes.Status200OK)

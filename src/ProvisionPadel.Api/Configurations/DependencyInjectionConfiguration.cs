@@ -17,5 +17,6 @@ public class DependencyInjectionConfiguration : IWebApplicationBuilderRegister
         builder.Services.AddScoped<IHikvisionService, HikvisionService>();
         builder.Services.AddScoped<IVideoService, VideoService>();
         builder.Services.AddScoped<ICameraService, CameraService>();
+        builder.Services.AddScoped<IEvolutionApiService, EvolutionApiService>();
     }
 }
