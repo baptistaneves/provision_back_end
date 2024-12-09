@@ -5,9 +5,9 @@ public class VideoService(IApplicationDbContext context) : IVideoService
 {
     private readonly IApplicationDbContext _context = context;
 
-    public async Task Create(string name, DateTime startTime, int channelId, CancellationToken cancellationToken)
+    public async Task Create(string name, string videoDownloadUrl, DateTime startTime, Guid cameraId, CancellationToken cancellationToken)
     {
-        var newVideo = Video.Create(name, startTime, channelId);
+        var newVideo = Video.Create(name, videoDownloadUrl, startTime, cameraId);
 
         _context.Videos.Add(newVideo);
 

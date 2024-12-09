@@ -14,6 +14,10 @@ public class CameraConfiguration : IEntityTypeConfiguration<Camera>
             .HasColumnType("boolean")
             .IsRequired();
 
+        builder.HasMany(x => x.Videos)
+            .WithOne(x => x.Camera)
+            .HasForeignKey(x => x.CameraId);
+
         builder.ToTable("Cameras");
     }
 }

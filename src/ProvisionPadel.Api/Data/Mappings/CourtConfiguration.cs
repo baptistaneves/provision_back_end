@@ -10,6 +10,10 @@ public class CourtConfiguration : IEntityTypeConfiguration<Court>
             .HasColumnType("text")
             .IsRequired();
 
+        builder.HasMany(x => x.Cameras)
+            .WithOne(x => x.Court)
+            .HasForeignKey(x => x.CourtId);
+
         builder.ToTable("Courts");
     }
 }

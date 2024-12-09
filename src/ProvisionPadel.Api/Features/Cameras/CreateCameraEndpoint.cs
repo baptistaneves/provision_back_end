@@ -1,6 +1,6 @@
 ﻿namespace ProvisionPadel.Api.Features.Cameras;
 
-public record CreateCameraRequest(int Channel);
+public record CreateCameraRequest(int Channel, Guid CourtId);
 
 public class CreateCameraEndpoint : ICarterModule
 {
@@ -8,7 +8,7 @@ public class CreateCameraEndpoint : ICarterModule
     {
         app.MapPost("/api/camera/create", async ([FromBody] CreateCameraRequest request, ICameraService cameraService, CancellationToken cancellationToken) =>
         {
-            await cameraService.Create(request.Channel, cancellationToken);
+            await cameraService.Create(request.Channel, request.CourtId, cancellationToken);
 
             return Results.Ok();
         })

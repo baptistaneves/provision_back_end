@@ -1,12 +1,11 @@
-﻿
-namespace ProvisionPadel.Api.Services;
+﻿namespace ProvisionPadel.Api.Services;
 
 public class CameraService(IApplicationDbContext context) : ICameraService
 {
     private readonly IApplicationDbContext _context = context;
-    public async Task Create(int channel, CancellationToken cancellationToken)
+    public async Task Create(int channel, Guid courtId, CancellationToken cancellationToken)
     {
-        var newCamera = Camera.Create(channel);
+        var newCamera = Camera.Create(channel, courtId);
 
         _context.Cameras.Add(newCamera);
 
@@ -27,25 +26,28 @@ public class CameraService(IApplicationDbContext context) : ICameraService
         return false;
     }
 
-    public async Task StartCameraRecording(int channel, CancellationToken cancellationToken)
+    public async Task<Camera> StartCameraRecording(int channel, CancellationToken cancellationToken)
     {
         var camera = await _context.Cameras.SingleOrDefaultAsync(x => x.Channel == channel);
 
-        if(camera is null) return;
+        if(camera is null) return null;
 
         camera.StartCameraRecording();
 
         await _context.SaveChangesAsync(cancellationToken);
+        return camera;
     }
 
-    public async Task StopCameraRecording(int channel, CancellationToken cancellationToken)
+    public async Task<Camera> StopCameraRecording(int channel, CancellationToken cancellationToken)
     {
         var camera = await _context.Cameras.SingleOrDefaultAsync(x => x.Channel == channel);
 
-        if (camera is null) return;
+        if (camera is null) return null;
 
         camera.StopCameraRecording();
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        return camera;
     }
 }

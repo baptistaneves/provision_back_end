@@ -4,6 +4,7 @@ public class Court : Entity
 {
     public string Description { get; private set; }
 
+    public IEnumerable<Camera> Cameras { get; set; }
 
     public static Court Create(string description)
     {

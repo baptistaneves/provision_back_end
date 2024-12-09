@@ -1,15 +1,22 @@
-﻿namespace ProvisionPadel.Api.Services;
+﻿using ProvisionPadel.Api.Data.Models;
 
-public class EvolutionApiService
-    (IOptions<EvoluctionApi> evolutionApi) : IEvolutionApiService
+namespace ProvisionPadel.Api.Services;
+
+public class EvolutionApiService : IEvolutionApiService
 {
-    public HttpClient _httpClient { get; } = new HttpClient();
-    private readonly EvoluctionApi _evolutionApi = evolutionApi.Value;
+    private readonly HttpClient _httpClient;
+    private readonly EvoluctionApi _evolutionApi;
+
+    public EvolutionApiService(IOptions<EvoluctionApi> evolutionApi)
+    {
+        _evolutionApi = evolutionApi.Value;
+
+        _httpClient = new HttpClient { BaseAddress = new Uri(_evolutionApi.BaseUrl) };
+        _httpClient.DefaultRequestHeaders.Add("apikey", _evolutionApi.GlobalApikey);
+    }
 
     public async Task<bool> SendVideo(string destination, string video)
     {
-        SetHeader();
-
         var payload = new
         {
             number = destination,
@@ -24,16 +31,9 @@ public class EvolutionApiService
 
         if (!response.IsSuccessStatusCode)
         {
-            Console.WriteLine($"Erro ao enviar vídeo. Código do erro: {(int)response.StatusCode} - {response.RequestMessage}");
+            Console.WriteLine($"Erro ao enviar vídeo. Código do erro: {(int)response.StatusCode} - {response.ReasonPhrase}");
         }
 
         return response.IsSuccessStatusCode;
-    }
-
-    private void SetHeader()
-    {
-        _httpClient.BaseAddress = new Uri(_evolutionApi.BaseUrl);
-
-        _httpClient.DefaultRequestHeaders.Add("apikey", _evolutionApi.GlobalApikey);
     }
 }

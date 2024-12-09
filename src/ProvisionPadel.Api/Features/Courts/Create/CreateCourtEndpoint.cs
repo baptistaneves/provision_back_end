@@ -4,7 +4,7 @@ namespace ProvisionPadel.Api.Features.Courts.Create;
 
 public record CreateCourtRequest(string Description);
 
-public record CreateCourtResponse(bool ISuccess);
+public record CreateCourtResponse(bool IsSuccess);
 
 public class CreateCourtEndpoint : ICarterModule
 {

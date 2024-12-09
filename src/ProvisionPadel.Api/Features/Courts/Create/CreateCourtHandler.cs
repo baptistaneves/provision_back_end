@@ -12,8 +12,8 @@ public class CreateCourtHandler(IApplicationDbContext context) : ICommandHandler
         var newCourt = Court.Create(command.Description);
 
         _context.Courts.Add(newCourt);
-        await _context.SaveChangesAsync(cancellationToken);
+        var result = await _context.SaveChangesAsync(cancellationToken) > 0;
 
-        return new CreateCourtResult(true);
+        return new CreateCourtResult(result);
     }
 }

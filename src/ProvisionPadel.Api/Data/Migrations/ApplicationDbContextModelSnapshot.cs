@@ -119,10 +119,15 @@ namespace ProvisionPadel.Api.Data.Migrations
                     b.Property<int>("Channel")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("CourtId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsRecording")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CourtId");
 
                     b.ToTable("Cameras", (string)null);
                 });
@@ -255,11 +260,8 @@ namespace ProvisionPadel.Api.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("CameraId")
+                    b.Property<Guid>("CameraId")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("Channel")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
@@ -276,6 +278,10 @@ namespace ProvisionPadel.Api.Data.Migrations
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("VideoDownloadUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -320,6 +326,17 @@ namespace ProvisionPadel.Api.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProvisionPadel.Api.Entities.Camera", b =>
+                {
+                    b.HasOne("ProvisionPadel.Api.Entities.Court", "Court")
+                        .WithMany("Cameras")
+                        .HasForeignKey("CourtId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Court");
+                });
+
             modelBuilder.Entity("ProvisionPadel.Api.Entities.UserRole", b =>
                 {
                     b.HasOne("ProvisionPadel.Api.Entities.Role", "Role")
@@ -341,14 +358,23 @@ namespace ProvisionPadel.Api.Data.Migrations
 
             modelBuilder.Entity("ProvisionPadel.Api.Entities.Video", b =>
                 {
-                    b.HasOne("ProvisionPadel.Api.Entities.Camera", null)
+                    b.HasOne("ProvisionPadel.Api.Entities.Camera", "Camera")
                         .WithMany("Videos")
-                        .HasForeignKey("CameraId");
+                        .HasForeignKey("CameraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Camera");
                 });
 
             modelBuilder.Entity("ProvisionPadel.Api.Entities.Camera", b =>
                 {
                     b.Navigation("Videos");
+                });
+
+            modelBuilder.Entity("ProvisionPadel.Api.Entities.Court", b =>
+                {
+                    b.Navigation("Cameras");
                 });
 
             modelBuilder.Entity("ProvisionPadel.Api.Entities.Role", b =>

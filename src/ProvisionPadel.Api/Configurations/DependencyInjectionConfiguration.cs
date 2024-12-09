@@ -18,5 +18,6 @@ public class DependencyInjectionConfiguration : IWebApplicationBuilderRegister
         builder.Services.AddScoped<IVideoService, VideoService>();
         builder.Services.AddScoped<ICameraService, CameraService>();
         builder.Services.AddScoped<IEvolutionApiService, EvolutionApiService>();
+        builder.Services.AddScoped<IBunnyService, BunnyService>();
     }
 }
