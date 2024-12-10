@@ -1,16 +1,21 @@
-﻿namespace ProvisionPadel.Api.Features.Videos.ExtractLast30Seconds;
+﻿using Mapster;
+
+namespace ProvisionPadel.Api.Features.Videos.ExtractLast30Seconds;
+
+public record ExtractLast30SecondsRequest(string FileName, string InstanceName, string Destination);
 
 public class ExtractLast30SecondsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/video/extract-last-30-seconds/{fileName}", async (string fileName, ISender sender, CancellationToken cancellationToken) =>
+        app.MapPost("/api/video/extract-last-30-seconds", async ([FromBody] ExtractLast30SecondsRequest request, ISender sender,
+            CancellationToken cancellationToken) =>
         {
-            var command = new ExtractLast30SecondsCommand(fileName);
+            var command = request.Adapt<ExtractLast30SecondsCommand>();
 
-            var result = await sender.Send(command, cancellationToken);
+            var response = await sender.Send(command, cancellationToken);
 
-            return Results.Ok(result);
+            return Results.Ok(response);
         })
         .WithName("ExtractLast30Seconds")
         .Produces(StatusCodes.Status200OK)

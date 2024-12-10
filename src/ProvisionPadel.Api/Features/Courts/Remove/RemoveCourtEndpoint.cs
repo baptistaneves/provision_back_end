@@ -8,7 +8,7 @@ public class RemoveCourtEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapDelete("/api/court/remove/{id}", async ([FromBody] Guid id, ISender sender) =>
+        app.MapDelete("/api/court/remove/{id}", async ([FromQuery] Guid id, ISender sender) =>
         {
             var command = new RemoveCourtCommand(id);
 
