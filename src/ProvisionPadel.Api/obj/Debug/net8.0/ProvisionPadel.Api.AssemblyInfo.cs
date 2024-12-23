@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProvisionPadel.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+81c5da49af0448484a5dfb8f8ca20551a2429a3b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a8bfc5dc5fa423b86b8ce0b553d8d530ae937dc")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProvisionPadel.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProvisionPadel.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

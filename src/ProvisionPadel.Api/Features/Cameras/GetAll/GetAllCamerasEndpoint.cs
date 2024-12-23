@@ -11,7 +11,7 @@ public class GetAllCamerasEndpoint : ICarterModule
             return Results.Ok(response);
         })
         .WithName("GetAllCameras")
-        .Produces<IEnumerable<Camera>>(StatusCodes.Status201Created)
+        .Produces<IEnumerable<CameraDto>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Get All Cameras")
         .WithDescription("Get All Cameras");

@@ -19,6 +19,12 @@ public class Camera : Entity
         };
     }
 
+    public void Update(int channel, Guid courtId)
+    {
+        Channel = channel;
+        CourtId = courtId;
+    }
+
     public void StartCameraRecording() => IsRecording = true;
     public void StopCameraRecording() => IsRecording = false;
 }

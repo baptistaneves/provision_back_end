@@ -2,7 +2,7 @@
 
 namespace ProvisionPadel.Api.Features.Courts.GetAll;
 
-public record GetAllCourtsReponse(IEnumerable<Court> courts);
+public record GetAllCourtsReponse(IEnumerable<CourtDto> courts);
 
 public class GetAllCourtsEndpoint : ICarterModule
 {

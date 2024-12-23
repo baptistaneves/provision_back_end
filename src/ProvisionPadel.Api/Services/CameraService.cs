@@ -12,9 +12,20 @@ public class CameraService(IApplicationDbContext context) : ICameraService
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Camera>> GetAll(CancellationToken cancellationToken)
+    public async Task<IEnumerable<CameraDto>> GetAll(CancellationToken cancellationToken)
     {
-        return await _context.Cameras.AsNoTracking().ToListAsync(cancellationToken);
+        return await _context.Cameras
+                        .AsNoTracking()
+                        .Include(x => x.Court)
+                        .Select(x => new CameraDto
+                        (
+                            x.Id,
+                            x.CourtId,
+                            x.Court.Description,
+                            x.Channel,
+                            x.IsRecording
+                         ))
+                        .ToListAsync(cancellationToken);
     }
 
     public async Task<bool> IsCameraRecording(int channel, CancellationToken cancellationToken)
@@ -24,6 +35,18 @@ public class CameraService(IApplicationDbContext context) : ICameraService
         if(isCameraRecording) return true;
 
         return false;
+    }
+
+    public async Task<bool> Remove(Guid id, CancellationToken cancellationToken)
+    {
+        var camera = await _context.Cameras.SingleOrDefaultAsync(x => x.Id == id);
+
+        if (camera is null) return false;
+
+        _context.Cameras.Remove(camera);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 
     public async Task<Camera> StartCameraRecording(int channel, CancellationToken cancellationToken)
@@ -49,5 +72,19 @@ public class CameraService(IApplicationDbContext context) : ICameraService
         await _context.SaveChangesAsync(cancellationToken);
 
         return camera;
+    }
+
+    public async Task<bool> Update(Guid id, int channel, Guid courtId, CancellationToken cancellationToken)
+    {
+        var camera = await _context.Cameras.SingleOrDefaultAsync(x => x.Id == id);
+
+        if (camera is null) return false;
+
+        camera.Update(channel, courtId);
+
+        _context.Cameras.Update(camera);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 }
