@@ -1,6 +1,9 @@
-﻿namespace ProvisionPadel.Api.Services;
+﻿using ProvisionPadel.Api.Services.Validators;
+using ProvisionPadel.Api.Shared.Results;
 
-public class EvolutionApiService : IEvolutionApiService
+namespace ProvisionPadel.Api.Services;
+
+public class EvolutionApiService : BaseService, IEvolutionApiService
 {
     private readonly HttpClient _httpClient;
     private readonly EvoluctionApi _evolutionApi;
@@ -13,8 +16,13 @@ public class EvolutionApiService : IEvolutionApiService
         _httpClient.DefaultRequestHeaders.Add("apikey", _evolutionApi.GlobalApikey);
     }
 
-    public async Task<bool> CreateInstance(string name)
+    public async Task<Result<bool>> CreateInstance(string name)
     {
+        var errors = Validate(new CreateInstanceValidator(), name);
+
+        if (errors.Any())
+            return Result<bool>.Failure(errors);
+
         var payload = new
         {
             instanceName = name,
@@ -26,21 +34,28 @@ public class EvolutionApiService : IEvolutionApiService
 
         var response = await _httpClient.PostAsync($"/instance/create", jsonContent);
 
-        return response.IsSuccessStatusCode;
+        if(!response.IsSuccessStatusCode)
+            return Result<bool>.Failure(new Error("Erro ao criar a conexão, tente novamente!"));
+
+        return Result<bool>.Success(response.IsSuccessStatusCode);
     }
 
-    public async Task<bool> DeleteInstance(string instanceName)
+    public async Task<Result<bool>> DeleteInstance(string instanceName)
     {
         var response = await _httpClient.DeleteAsync($"/instance/delete/{instanceName}");
 
-        return response.IsSuccessStatusCode;
+        if (!response.IsSuccessStatusCode)
+            return Result<bool>.Failure(new Error("Erro ao excluir a conexão, tente novamente!"));
+
+        return Result<bool>.Success(response.IsSuccessStatusCode);
     }
 
-    public async Task<InstanceDto?> FetchInstanceById(Guid instanceId)
+    public async Task<Result<InstanceDto>> FetchInstanceById(Guid instanceId)
     {
         var response = await _httpClient.GetAsync($"/instance/fetchInstances?instanceId={instanceId}");
 
-        if (!response.IsSuccessStatusCode) return null;
+        if (!response.IsSuccessStatusCode)
+            return Result<InstanceDto>.Failure(new Error($"A conexão solicitada não foi encontrada")); ;
 
         var jsonString = await response.Content.ReadAsStringAsync();
         var result = JsonSerializer.Deserialize<List<InstanceDto>>(jsonString, new JsonSerializerOptions
@@ -48,7 +63,7 @@ public class EvolutionApiService : IEvolutionApiService
             PropertyNameCaseInsensitive = true
         });
 
-        return result?.FirstOrDefault();
+        return Result<InstanceDto>.Success(result?.FirstOrDefault()!);
     }
 
     public async Task<IEnumerable<InstanceDto>> FetchInstances()
@@ -66,11 +81,12 @@ public class EvolutionApiService : IEvolutionApiService
         return result;
     }
 
-    public async Task<QrcodeDto> InstanceConnect(string instanceName)
+    public async Task<Result<QrcodeDto>> InstanceConnect(string instanceName)
     {
         var response = await _httpClient.GetAsync($"/instance/connect/{instanceName}");
 
-        if (!response.IsSuccessStatusCode) return null;
+        if (!response.IsSuccessStatusCode)
+            return Result<QrcodeDto>.Failure(new Error($"Erro ao obter o QrCode. Tente novamente"));
 
         var jsonString = await response.Content.ReadAsStringAsync();
         var result = JsonSerializer.Deserialize<QrcodeDto>(jsonString, new JsonSerializerOptions
@@ -78,7 +94,7 @@ public class EvolutionApiService : IEvolutionApiService
             PropertyNameCaseInsensitive = true
         });
 
-        return result;
+        return Result<QrcodeDto>.Success(result!);
     }
 
     public async Task<bool> LogoutInstance(string instanceName)
@@ -88,7 +104,7 @@ public class EvolutionApiService : IEvolutionApiService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> SendVideo(string destination, string instanceName, string video)
+    public async Task<Result<bool>> SendVideo(string destination, string instanceName, string video)
     {
         var payload = new
         {
@@ -103,10 +119,8 @@ public class EvolutionApiService : IEvolutionApiService
         var response = await _httpClient.PostAsync($"/message/sendMedia/{instanceName}", jsonContent);
 
         if (!response.IsSuccessStatusCode)
-        {
-            Console.WriteLine($"Erro ao enviar vídeo. Código do erro: {(int)response.StatusCode} - {response.ReasonPhrase}");
-        }
+           return Result<bool>.Failure(new Error($"Erro ao enviar vídeo. Tente novamente"));
 
-        return response.IsSuccessStatusCode;
+        return Result<bool>.Success(response.IsSuccessStatusCode);
     }
 }

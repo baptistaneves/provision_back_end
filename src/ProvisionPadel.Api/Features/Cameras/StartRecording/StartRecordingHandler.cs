@@ -2,46 +2,38 @@
 
 public record StartRecordingResult(string Content);
 
-public record StartRecordingCommand(int ChannelId) : ICommand<StartRecordingResult>;
+public record StartRecordingCommand(int ChannelId) : ICommand<Result<string>>;
 
 public class StartRecordingHandler
     (HikvisionHttpClient hikvisionHttpClient,
      IHikvisionService hikvisionService,
      ICameraService cameraService,
      IVideoService videoService,
-     IOptions<Bunny> bunny,
-     INotifier notifier
-    ) : ICommandHandler<StartRecordingCommand, StartRecordingResult>
+     IOptions<Bunny> bunny
+    ) : ICommandHandler<StartRecordingCommand, Result<string>>
 {
     private readonly Bunny _bunny = bunny.Value;
     private readonly HikvisionHttpClient _hikvisionHttpClient = hikvisionHttpClient;
     private readonly IHikvisionService _hikvisionService = hikvisionService;
     private readonly ICameraService _cameraService = cameraService;
     private readonly IVideoService _videoService = videoService;
-    private readonly INotifier _notifier = notifier;
 
-    public async Task<StartRecordingResult> Handle(StartRecordingCommand command, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(StartRecordingCommand command, CancellationToken cancellationToken)
     {
-        if (await IsCameraAlreadyRecording(command.ChannelId, cancellationToken))
-            return new StartRecordingResult(ErrorMessages.ErrorStartingRecord);
+        if (await _cameraService.IsCameraRecording(command.ChannelId, cancellationToken))
+            return Result<string>.Failure(new Error(ErrorMessages.ChannelIsRecording));
 
         var response = await StartRecording(command.ChannelId);
 
-        await ChangeCameraStatus(command.ChannelId, response, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+            return Result<string>.Failure(new Error(ErrorMessages.ErrorStartingRecord));
 
-        return new StartRecordingResult(await response.Content.ReadAsStringAsync());
-    }
+        var changeCameraStatusResult = await ChangeCameraStatus(command.ChannelId, response, cancellationToken);
 
-    private async Task<bool> IsCameraAlreadyRecording(int ChannelId, CancellationToken cancellationToken)
-    {
-        if (await _cameraService.IsCameraRecording(ChannelId, cancellationToken))
-        {
-            _notifier.Add(ErrorMessages.ChannelIsRecording);
+        if (!changeCameraStatusResult.IsSuccess)
+            return Result<string>.Failure(new Error(changeCameraStatusResult.Error!.Message));
 
-            return true;
-        }
-
-        return false;
+        return Result<string>.Success(await response.Content.ReadAsStringAsync());
     }
 
     private async Task<HttpResponseMessage> StartRecording(int channelId)
@@ -51,23 +43,25 @@ public class StartRecordingHandler
         return await _hikvisionHttpClient.Client.PutAsync(url, null);
     }
 
-    private async Task ChangeCameraStatus(int channelId, HttpResponseMessage response, CancellationToken cancellationToken)
+    private async Task<Result<bool>> ChangeCameraStatus(int channelId, HttpResponseMessage response, CancellationToken cancellationToken)
     {
         var start = DateTime.Now;
 
-        if (response.IsSuccessStatusCode)
-        {
-            await Task.Delay(3000);
+        await Task.Delay(3000);
 
-            var (startTime, name) = await _hikvisionService
-                .ExtractNameAndStartTimeFromXml(channelId.ToString(), start.AddMinutes(-2), DateTime.Now.AddMinutes(1));
+        var (startTime, name) = await _hikvisionService
+            .ExtractNameAndStartTimeFromXml(channelId.ToString(), start.AddMinutes(-2), DateTime.Now.AddMinutes(1));
 
-            var camera = await _cameraService.StartCameraRecording(channelId, cancellationToken);
+        var camera = await _cameraService.StartCameraRecording(channelId, cancellationToken);
 
-            var videoDownloadUrl = $"/{_bunny.BaseUrl}/{_bunny.StorageZone}/{name}?accessKey={_bunny.StorageZoneKey}&download";
+        if (camera is null)
+            return Result<bool>.Failure(new Error("Nenhuma camara com a canal informado foi encontrada"));
 
-            await SaveVideo(name, videoDownloadUrl, startTime.ConvertToUtcDateTime().AddHours(-1), camera.Id, cancellationToken);
-        }
+        var videoDownloadUrl = $"/{_bunny.BaseUrl}/{_bunny.StorageZone}/{name}?accessKey={_bunny.StorageZoneKey}&download";
+
+        await SaveVideo(name, videoDownloadUrl, startTime.ConvertToUtcDateTime().AddHours(-1), camera.Id, cancellationToken);
+
+        return Result<bool>.Success(true);
     }
 
     private async Task SaveVideo(string name, string videoDownloadUrl, DateTime startTime, Guid cameraId, CancellationToken cancellationToken)

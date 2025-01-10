@@ -2,16 +2,16 @@
 
 public record ExtractLast30SecondsResult(bool IsSuccess);
 
-public record ExtractLast30SecondsCommand(string FileName, string InstanceName, string Destination) : ICommand<ExtractLast30SecondsResult>;
+public record ExtractLast30SecondsCommand(string FileName, string InstanceName, string Destination) : ICommand<Result<bool>>;
 
 public class ExtractLast30SecondsHandler
     (IEvolutionApiService evolutionApiService,
-     IOptions<Fmpeg> ffmpeg) : ICommandHandler<ExtractLast30SecondsCommand, ExtractLast30SecondsResult>
+     IOptions<Fmpeg> ffmpeg) : ICommandHandler<ExtractLast30SecondsCommand, Result<bool>>
 {
     private readonly Fmpeg _ffmpeg = ffmpeg.Value;
     private readonly IEvolutionApiService _evolutionApiService = evolutionApiService;
 
-    public async Task<ExtractLast30SecondsResult> Handle(ExtractLast30SecondsCommand command, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(ExtractLast30SecondsCommand command, CancellationToken cancellationToken)
     {
         var filePath = Path.Combine(_ffmpeg.VideoDirectory, $"{command.FileName}.mp4");
 
@@ -25,11 +25,11 @@ public class ExtractLast30SecondsHandler
 
         var media = ConvertToBase64(fileOutPut);
 
-        var isSuccess = await _evolutionApiService.SendVideo(command.Destination, command.InstanceName, media);
+        var result = await _evolutionApiService.SendVideo(command.Destination, command.InstanceName, media);
 
-        if (isSuccess) DeleteVideo(fileOutPut);
+        if (result.IsSuccess) DeleteVideo(fileOutPut);
 
-        return new ExtractLast30SecondsResult(isSuccess);
+        return Result<bool>.Success(true);
     }
 
     private void DeleteVideo(string fileOutPut)

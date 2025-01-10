@@ -2,11 +2,9 @@
 
 namespace ProvisionPadel.Api.Features.Users.Create;
 
-public record CreateUserResponse(Guid Id, string Token, string Email, string UserName, string PhoneNumber);
-
 public record CreateUserRequest(string Email, string UserName, string PhoneNumber, string Role, string Password);
 
-public class CreateAdminEndpoint : ICarterModule
+public class CreateAdminEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -16,12 +14,10 @@ public class CreateAdminEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<CreateUserResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("CreateUser")
-        .Produces<CreateUserResponse>(StatusCodes.Status200OK)
+        .Produces<Result<CreateUserResult>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithDescription("Create User");
     }

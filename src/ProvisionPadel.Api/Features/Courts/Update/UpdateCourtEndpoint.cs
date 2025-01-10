@@ -4,9 +4,7 @@ namespace ProvisionPadel.Api.Features.Courts.Update;
 
 public record UpdateCourtRequest(Guid Id, string Description);
 
-public record UpdateCourtResponse(bool IsSuccess);
-
-public class UpdateCourtEndpoint : ICarterModule
+public class UpdateCourtEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -16,12 +14,10 @@ public class UpdateCourtEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<UpdateCourtResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("Updatecourt")
-        .Produces<UpdateCourtResponse>(StatusCodes.Status201Created)
+        .Produces<Result<bool>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Update Court")
         .WithDescription("Update Court");

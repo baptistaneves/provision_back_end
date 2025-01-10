@@ -4,7 +4,7 @@ namespace ProvisionPadel.Api.Features.Videos.ExtractLast30Seconds;
 
 public record ExtractLast30SecondsRequest(string FileName, string InstanceName, string Destination);
 
-public class ExtractLast30SecondsEndpoint : ICarterModule
+public class ExtractLast30SecondsEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -15,7 +15,7 @@ public class ExtractLast30SecondsEndpoint : ICarterModule
 
             var response = await sender.Send(command, cancellationToken);
 
-            return Results.Ok(response);
+            return Response(response);
         })
         .WithName("ExtractLast30Seconds")
         .Produces(StatusCodes.Status200OK)

@@ -1,46 +1,43 @@
 ﻿namespace ProvisionPadel.Api.Features.Roles.Create;
 
-public record CreateRoleResult(bool IsSuccess);
-
-public record CreateRoleCommand(string Name, List<ClaimDto> Claims) : ICommand<CreateRoleResult>;
+public record CreateRoleCommand(string Name, List<ClaimDto> Claims) : ICommand<Result<bool>>;
 
 public class CreateRoleHandler
     (RoleManager<Role> roleManager,
-    INotifier notifier) : ICommandHandler<CreateRoleCommand, CreateRoleResult>
+    INotifier notifier) : ICommandHandler<CreateRoleCommand, Result<bool>>
 {
     private readonly RoleManager<Role> _roleManager = roleManager;
     private readonly INotifier _notifier = notifier;
 
-    public async Task<CreateRoleResult> Handle(CreateRoleCommand command, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(CreateRoleCommand command, CancellationToken cancellationToken)
     {
-        await EnsureRoleDoesNotExist(command.Name);
+        if(await EnsureRoleDoesNotExist(command.Name))
+            return Result<bool>.Failure(new Error("Já existe um perfil com este nome"));
 
         var newRole = new Role { Name = command.Name };
 
         var result = await _roleManager.CreateAsync(newRole);
 
-        result.ValidateOperation(_notifier);
-
-        await AddClaimsToRole(newRole, command.Claims);
-
-        return new CreateRoleResult(true);
-    }
-
-    private async Task EnsureRoleDoesNotExist(string roleName)
-    {
-        if (await _roleManager.Roles.Where(x => x.Name == roleName).AnyAsync())
-            _notifier.Add("Já existe uma role com este nome");
-    }
-
-    private async Task AddClaimsToRole(Role role, List<ClaimDto> claims)
-    {
-        if (!claims.Any()) return;
-
-        foreach (var claim in claims)
+        if(!result.Succeeded )
         {
-            var result = await _roleManager.AddClaimAsync(role, new Claim(claim.Type, claim.Value));
+            var errors = result.Errors.Select(error => new Error(error.Description)).ToList();
 
-            result.ValidateOperation(_notifier);
+            return Result<bool>.Failure(errors);
         }
+
+        if(command.Claims.Any())
+        {
+            foreach(var claim in command.Claims)
+            {
+                await _roleManager.AddClaimAsync(newRole, new Claim(claim.Type, claim.Value));
+            }
+        }
+
+        return Result<bool>.Success(true);
+    }
+
+    private async Task<bool>EnsureRoleDoesNotExist(string roleName)
+    {
+        return await _roleManager.Roles.Where(x => x.Name == roleName).AnyAsync();
     }
 }

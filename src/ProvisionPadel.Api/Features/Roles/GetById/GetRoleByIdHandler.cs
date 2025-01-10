@@ -2,32 +2,29 @@
 
 public record GetRoleByIdResult(RoleDto Role);
 
-public record GetRoleByIdQuery(Guid Id) : IQuery<GetRoleByIdResult>;
+public record GetRoleByIdQuery(Guid Id) : IQuery<Result<GetRoleByIdResult>>;
 
 public class GetRoleByIdHandler
-    (RoleManager<Role> roleManager,
-    INotifier notifier) : IQueryHandler<GetRoleByIdQuery, GetRoleByIdResult>
+    (RoleManager<Role> roleManager) : IQueryHandler<GetRoleByIdQuery, Result<GetRoleByIdResult>>
 {
     private readonly RoleManager<Role> _roleManager = roleManager;
-    private readonly INotifier _notifier = notifier;
-    public async Task<GetRoleByIdResult> Handle(GetRoleByIdQuery query, CancellationToken cancellationToken)
+
+    public async Task<Result<GetRoleByIdResult>> Handle(GetRoleByIdQuery query, CancellationToken cancellationToken)
     {
         var role = await _roleManager.FindByIdAsync(query.Id.ToString());
+
         if (role is null)
-        {
-            _notifier.Add("O perfil solicitado não foi encontrado");
-            return null;
-        }
+            return Result<GetRoleByIdResult>.Failure(new Error("O perfil solicitado não foi encontrado"));
 
         var claims = await _roleManager.GetClaimsAsync(role);
 
         var roleDto = new RoleDto
         {
             Id = role.Id,
-            Name = role.Name,
+            Name = role.Name!,
             Claims = claims.Select(claim => new ClaimDto(claim.Type, claim.Value)).ToList()
         };
 
-        return new GetRoleByIdResult(roleDto);
+        return Result<GetRoleByIdResult>.Success(new GetRoleByIdResult(roleDto));
     }
 }

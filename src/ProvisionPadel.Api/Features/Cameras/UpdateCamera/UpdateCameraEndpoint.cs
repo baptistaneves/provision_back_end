@@ -1,16 +1,14 @@
 ﻿namespace ProvisionPadel.Api.Features.Cameras.UpdateCamera;
 
-public record UpdateCameraRequest(Guid Id, int Channel, Guid CourtId);
-
-public class UpdateCameraEndpoint : ICarterModule
+public class UpdateCameraEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPut("/api/camera/update", async ([FromBody] UpdateCameraRequest request, ICameraService cameraService, CancellationToken cancellationToken) =>
         {
-            var response = await cameraService.Update(request.Id, request.Channel, request.CourtId, cancellationToken);
+            var result = await cameraService.Update(request, cancellationToken);
 
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("UpdateCamera")
         .Produces(StatusCodes.Status200OK)

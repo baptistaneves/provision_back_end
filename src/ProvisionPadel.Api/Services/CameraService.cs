@@ -1,15 +1,27 @@
-﻿namespace ProvisionPadel.Api.Services;
+﻿
+using MediatR;
+using System.Threading;
 
-public class CameraService(IApplicationDbContext context) : ICameraService
+namespace ProvisionPadel.Api.Services;
+
+public class CameraService(IApplicationDbContext context) : BaseService, ICameraService
 {
     private readonly IApplicationDbContext _context = context;
-    public async Task Create(int channel, Guid courtId, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Create(CreateCameraRequest request, CancellationToken cancellationToken)
     {
-        var newCamera = Camera.Create(channel, courtId);
+        var errors = Validate(new CreateCameraValidator(), request);
+
+        if(errors.Any()) 
+            return Result<bool>.Failure(errors);
+
+        if (await _context.Cameras.AnyAsync(x => x.Channel == request.Channel, cancellationToken))
+            return Result<bool>.Failure(new Error("Já existe uma camera cadastrada com este número"));
+
+        var newCamera = Camera.Create(request.Channel, request.CourtId);
 
         _context.Cameras.Add(newCamera);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        return Result<bool>.Success(await _context.SaveChangesAsync(cancellationToken) > 0);
     }
 
     public async Task<IEnumerable<CameraDto>> GetAll(CancellationToken cancellationToken)
@@ -37,16 +49,23 @@ public class CameraService(IApplicationDbContext context) : ICameraService
         return false;
     }
 
-    public async Task<bool> Remove(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Remove(Guid id, CancellationToken cancellationToken)
     {
-        var camera = await _context.Cameras.SingleOrDefaultAsync(x => x.Id == id);
+        var camera = await GetCameraById(id);
 
-        if (camera is null) return false;
+        if (camera is null)
+            return Result<bool>.Failure(new Error(ErrorMessages.CameraNotFound));
+
+        if(await IsCameraRecording(camera.Channel, cancellationToken))
+            return Result<bool>.Failure(new Error(ErrorMessages.CameraRecordingCanNotBeRemoved));
+
+        if(camera.Videos.Any())
+            return Result<bool>.Failure(new Error(ErrorMessages.CameraWithVideoCanNotBeRemoved));
 
         _context.Cameras.Remove(camera);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return true;
+        return Result<bool>.Success(true);
     }
 
     public async Task<Camera> StartCameraRecording(int channel, CancellationToken cancellationToken)
@@ -74,17 +93,35 @@ public class CameraService(IApplicationDbContext context) : ICameraService
         return camera;
     }
 
-    public async Task<bool> Update(Guid id, int channel, Guid courtId, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Update(UpdateCameraRequest request, CancellationToken cancellationToken)
     {
-        var camera = await _context.Cameras.SingleOrDefaultAsync(x => x.Id == id);
+        var errors = Validate(new UpdateCameraValidator(), request);
 
-        if (camera is null) return false;
+        if (errors.Any())
+            return Result<bool>.Failure(errors);
 
-        camera.Update(channel, courtId);
+        var camera = await _context.Cameras.SingleOrDefaultAsync(x => x.Id == request.Id);
+
+        if (camera is null)
+            return Result<bool>.Failure(new Error(ErrorMessages.CameraNotFound));
+
+        if (await _context.Cameras.AnyAsync(x => x.Channel == request.Channel && x.Id != request.Id, cancellationToken))
+            return Result<bool>.Failure(new Error("Já existe uma camera cadastrada com este número"));
+
+        camera.Update(request.Channel, request.CourtId);
 
         _context.Cameras.Update(camera);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return true;
+        return Result<bool>.Success(true);
+    }
+
+    private async Task<Camera> GetCameraById(Guid id)
+    {
+        return await _context.Cameras
+                        .AsNoTracking()
+                        .Include(x => x.Court)
+                        .Include(x => x.Videos)
+                        .SingleOrDefaultAsync(x => x.Id == id);
     }
 }

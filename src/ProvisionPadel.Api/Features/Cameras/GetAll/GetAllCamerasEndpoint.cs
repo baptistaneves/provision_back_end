@@ -1,4 +1,6 @@
-﻿namespace ProvisionPadel.Api.Features.Cameras.GetAll;
+﻿using ProvisionPadel.Api.Shared.Accesses;
+
+namespace ProvisionPadel.Api.Features.Cameras.GetAll;
 
 public class GetAllCamerasEndpoint : ICarterModule
 {
@@ -14,6 +16,7 @@ public class GetAllCamerasEndpoint : ICarterModule
         .Produces<IEnumerable<CameraDto>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Get All Cameras")
-        .WithDescription("Get All Cameras");
+        .WithDescription("Get All Cameras")
+        .RequireAuthorization(policy => policy.RequireCustomClaim(Access.Camera, Access.View));
     }
 }

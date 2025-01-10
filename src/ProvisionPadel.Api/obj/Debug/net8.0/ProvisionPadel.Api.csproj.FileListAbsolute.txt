@@ -545,3 +545,5 @@ C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\obj\Debug\net8
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\obj\Debug\net8.0\ProvisionPadel.Api.pdb
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\obj\Debug\net8.0\ProvisionPadel.Api.genruntimeconfig.cache
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\obj\Debug\net8.0\ref\ProvisionPadel.Api.dll
+C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using ProvisionPadel.Api.Features.BaseEndpoints;
 
 namespace ProvisionPadel.Api.Features.Login;
 
@@ -6,7 +7,7 @@ public record LoginRequest(string Email, string Password);
 
 public record LoginResponse(Guid Id, string Token, string Email, string Name);
 
-public class LoginEndpoint : ICarterModule
+public class LoginEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -16,9 +17,7 @@ public class LoginEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<LoginResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
          .WithName("Login")
          .Produces<LoginResponse>(StatusCodes.Status200OK)

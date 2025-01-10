@@ -1,7 +1,5 @@
 ﻿namespace ProvisionPadel.Api.Features.Cameras.CreateCamera;
 
-public record CreateCameraRequest(int Channel, Guid CourtId);
-
 public class CreateCameraEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)

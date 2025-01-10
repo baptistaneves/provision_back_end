@@ -6,7 +6,7 @@ public record CreateCourtRequest(string Description);
 
 public record CreateCourtResponse(bool IsSuccess);
 
-public class CreateCourtEndpoint : ICarterModule
+public class CreateCourtEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -16,12 +16,10 @@ public class CreateCourtEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<CreateCourtResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("CreateCourt")
-        .Produces<CreateCourtResponse>(StatusCodes.Status201Created)
+        .Produces<Result<bool>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Create Court")
         .WithDescription("Create Court");

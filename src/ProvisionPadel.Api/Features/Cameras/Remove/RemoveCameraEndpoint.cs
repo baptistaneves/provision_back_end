@@ -1,14 +1,14 @@
 ﻿namespace ProvisionPadel.Api.Features.Cameras.Remove;
 
-public class RemoveCameraEndpoint : ICarterModule
+public class RemoveCameraEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapDelete("/api/camera/remove/{id}", async (Guid id, ICameraService cameraService, CancellationToken cancellationToken) =>
         {
-            var response = await cameraService.Remove(id, cancellationToken);
+            var result = await cameraService.Remove(id, cancellationToken);
 
-            return Results.Ok(response);
+            return Response(result);
         })
        .WithName("RemoveCamera")
        .Produces(StatusCodes.Status200OK)

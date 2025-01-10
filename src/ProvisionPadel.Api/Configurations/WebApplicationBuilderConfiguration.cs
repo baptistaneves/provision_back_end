@@ -1,9 +1,24 @@
-﻿namespace ProvisionPadel.Api.Configurations;
+﻿using FluentValidation;
+
+namespace ProvisionPadel.Api.Configurations;
 
 public class WebApplicationBuilderConfiguration : IWebApplicationBuilderRegister
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {
+        var assembly = typeof(Program).Assembly;
+
+        builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+        builder.Services.AddCarter();
+
+        builder.Services.AddMediatR(config =>
+        {
+            config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+        });
+
+        builder.Services.AddValidatorsFromAssembly(assembly);
+
         var cors = new Cors();
         var evolutionApi = new EvoluctionApi();
         var hikvisionNvr = new HikvisionNVR();
@@ -45,10 +60,5 @@ public class WebApplicationBuilderConfiguration : IWebApplicationBuilderRegister
             config.SubstituteApiVersionInUrl = true;
         });
 
-        builder.Services.AddMediatR(config => { config.RegisterServicesFromAssembly(typeof(Program).Assembly); });
-
-        builder.Services.AddCarter();
-
-        builder.Services.AddExceptionHandler<CustomExceptionHandler>();
     }
 }

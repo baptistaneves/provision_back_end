@@ -2,11 +2,9 @@
 
 namespace ProvisionPadel.Api.Features.Roles.Update;
 
-public record UpdateRoleResponse(bool IsSuccess);
-
 public record UpdateRoleRequest(Guid Id, string Name, List<ClaimDto> Claims);
 
-public class UpdateRoleEndpoint : ICarterModule
+public class UpdateRoleEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -16,12 +14,10 @@ public class UpdateRoleEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<UpdateRoleResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("UpdateRole")
-        .Produces<UpdateRoleResponse>(StatusCodes.Status200OK)
+        .Produces<bool>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithDescription("Update Role");
     }

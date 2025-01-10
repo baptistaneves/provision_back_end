@@ -1,10 +1,8 @@
-﻿using Mapster;
-
-namespace ProvisionPadel.Api.Features.Courts.Remove;
+﻿namespace ProvisionPadel.Api.Features.Courts.Remove;
 
 public record RemoveCourtResponse(bool IsSuccess);
 
-public class RemoveCourtEndpoint : ICarterModule
+public class RemoveCourtEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -14,12 +12,10 @@ public class RemoveCourtEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<RemoveCourtResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("RemoveCourte")
-        .Produces<RemoveCourtResponse>(StatusCodes.Status201Created)
+        .Produces<Result<bool>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Remove Court")
         .WithDescription("Remove Court");

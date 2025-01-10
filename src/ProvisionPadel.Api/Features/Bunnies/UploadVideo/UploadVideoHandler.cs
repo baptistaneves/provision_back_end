@@ -6,12 +6,10 @@ public record UploadVideoCommand(string VideoName, Guid LibraryId) : ICommand<Up
 
 public class UploadVideoHandler
     (IOptions<Fmpeg> ffmpeg,
-    IBunnyService bunnyService,
-    IApplicationDbContext context) : ICommandHandler<UploadVideoCommand, UploadVideoResult>
+    IBunnyService bunnyService) : ICommandHandler<UploadVideoCommand, UploadVideoResult>
 {
     private readonly Fmpeg _ffmpeg = ffmpeg.Value;
     private readonly IBunnyService _bunnyservice = bunnyService;
-    private readonly IApplicationDbContext _context = context;
 
     public async Task<UploadVideoResult> Handle(UploadVideoCommand command, CancellationToken cancellationToken)
     {

@@ -1,4 +1,6 @@
-﻿namespace ProvisionPadel.Api.Configurations;
+﻿using ProvisionPadel.Api.Features.Login;
+
+namespace ProvisionPadel.Api.Configurations;
 
 public class DependencyInjectionConfiguration : IWebApplicationBuilderRegister
 {
@@ -19,5 +21,6 @@ public class DependencyInjectionConfiguration : IWebApplicationBuilderRegister
         builder.Services.AddScoped<ICameraService, CameraService>();
         builder.Services.AddScoped<IEvolutionApiService, EvolutionApiService>();
         builder.Services.AddScoped<IBunnyService, BunnyService>();
+
     }
 }

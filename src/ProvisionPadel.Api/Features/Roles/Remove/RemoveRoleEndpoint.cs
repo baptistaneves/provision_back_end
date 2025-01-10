@@ -1,10 +1,6 @@
-﻿using Mapster;
+﻿namespace ProvisionPadel.Api.Features.Roles.Remove;
 
-namespace ProvisionPadel.Api.Features.Roles.Remove;
-
-public record RemoveRoleResponse(bool IsSuccess);
-
-public class RemoveRoleEndpoint : ICarterModule
+public class RemoveRoleEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -14,12 +10,10 @@ public class RemoveRoleEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<RemoveRoleResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("RemoveRole")
-        .Produces<RemoveRoleResponse>(StatusCodes.Status200OK)
+        .Produces<Result<bool>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithDescription("Remove Role");

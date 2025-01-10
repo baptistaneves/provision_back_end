@@ -2,12 +2,12 @@
 
 public interface IEvolutionApiService
 {
-    Task<bool> SendVideo(string destination, string instanceName, string video);
+    Task<Result<bool>> SendVideo(string destination, string instanceName, string video);
 
-    Task<bool> CreateInstance(string instanceName);
-    Task<QrcodeDto> InstanceConnect(string instanceName);
+    Task<Result<bool>> CreateInstance(string instanceName);
+    Task<Result<QrcodeDto>> InstanceConnect(string instanceName);
     Task<IEnumerable<InstanceDto>> FetchInstances();
-    Task<InstanceDto> FetchInstanceById(Guid instanceId);
+    Task<Result<InstanceDto>> FetchInstanceById(Guid instanceId);
     Task<bool> LogoutInstance(string instanceName);
-    Task<bool> DeleteInstance(string instanceName);
+    Task<Result<bool>> DeleteInstance(string instanceName);
 }

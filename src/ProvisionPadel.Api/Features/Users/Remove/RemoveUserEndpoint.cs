@@ -1,10 +1,6 @@
-﻿using Mapster;
+﻿namespace ProvisionPadel.Api.Features.Users.Remove;
 
-namespace ProvisionPadel.Api.Features.Users.Remove;
-
-public record RemoveUserResponse(bool IsSuccess);
-
-public class RemoveUserEndpoint : ICarterModule
+public class RemoveUserEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -12,12 +8,10 @@ public class RemoveUserEndpoint : ICarterModule
         {
             var result = await sender.Send(new RemoveUserCommand(id));
 
-            var response = result.Adapt<RemoveUserResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
          .WithName("RemoveUser")
-         .Produces<RemoveUserResponse>(StatusCodes.Status200OK)
+         .Produces<Result<bool>>(StatusCodes.Status200OK)
          .ProducesProblem(StatusCodes.Status400BadRequest)
          .ProducesProblem(StatusCodes.Status404NotFound)
          .WithDescription("Remove User");

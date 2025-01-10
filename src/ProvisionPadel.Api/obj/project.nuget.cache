@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "IbGKQhm9BNCHN/bcISKijjcPq4qPJtgUzfUwayRGy66W7rs3ktzoGYZIBDPvEZmsuPsj6JznVw8lX7Drp8hc4g==",
+  "dgSpecHash": "OygxG+sldJ1/Eq9KscaxBpvjxOFnI6RoWnFRKHXxkWMMR9exkFmDFgmjWjUNoDlhM6VtlnWnDFSkl/s4e1kXAg==",
   "success": true,
   "projectFilePath": "C:\\Baptista Neves\\ucall\\provision_back_end\\src\\ProvisionPadel.Api\\ProvisionPadel.Api.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,9 @@
     "C:\\Users\\dannn\\.nuget\\packages\\carter.analyzers\\8.2.1\\carter.analyzers.8.2.1.nupkg.sha512",
     "C:\\Users\\dannn\\.nuget\\packages\\emgu.cv\\4.9.0.5494\\emgu.cv.4.9.0.5494.nupkg.sha512",
     "C:\\Users\\dannn\\.nuget\\packages\\ffmpeg.autogen\\7.0.0\\ffmpeg.autogen.7.0.0.nupkg.sha512",
-    "C:\\Users\\dannn\\.nuget\\packages\\fluentvalidation\\11.10.0\\fluentvalidation.11.10.0.nupkg.sha512",
+    "C:\\Users\\dannn\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+    "C:\\Users\\dannn\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\dannn\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\dannn\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\dannn\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",
     "C:\\Users\\dannn\\.nuget\\packages\\mapster.core\\1.2.1\\mapster.core.1.2.1.nupkg.sha512",

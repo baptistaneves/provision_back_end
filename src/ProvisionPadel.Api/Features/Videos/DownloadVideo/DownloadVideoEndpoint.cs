@@ -6,7 +6,7 @@ public record DownloadVideoRequest(int ChannelId, string Name, string Size, Date
 
 public record DownloadVideoResponse(byte[] Content);
 
-public class DownloadVideoEndpoint : ICarterModule
+public class DownloadVideoEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -15,6 +15,9 @@ public class DownloadVideoEndpoint : ICarterModule
             var command = request.Adapt<DownloadVideoCommand>();
 
             var result = await sender.Send(command);
+
+            if (!result.IsSuccess)
+                return Results.BadRequest(result.Error);
 
             var videoStream = result.Adapt<DownloadVideoResponse>();
 

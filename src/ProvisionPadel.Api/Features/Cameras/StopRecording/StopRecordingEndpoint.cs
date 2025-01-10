@@ -4,9 +4,7 @@ namespace ProvisionPadel.Api.Features.Cameras.StopRecording;
 
 public record StopRecordingRequest(int ChannelId);
 
-public record StopRecordingResponse(string Content);
-
-public class StopRecordingEndpoint : ICarterModule
+public class StopRecordingEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -16,12 +14,10 @@ public class StopRecordingEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<StopRecordingResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("StopRecording")
-        .Produces<StopRecordingResponse>(StatusCodes.Status200OK)
+        .Produces<Result<string>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Stop Recording")
         .WithDescription("Stop Recording");

@@ -1,10 +1,8 @@
-﻿using Mapster;
-
-namespace ProvisionPadel.Api.Features.Roles.GetById;
+﻿namespace ProvisionPadel.Api.Features.Roles.GetById;
 
 public record GetRoleByIdResponse(RoleDto Role);
 
-public class GetRoleByIdEndpoint : ICarterModule
+public class GetRoleByIdEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -14,12 +12,10 @@ public class GetRoleByIdEndpoint : ICarterModule
 
             var result = await sender.Send(query);
 
-            var response = result.Adapt<GetRoleByIdResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("GetRoleById")
-        .Produces<GetRoleByIdResponse>(StatusCodes.Status200OK)
+        .Produces<GetRoleByIdResult>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithDescription("Get Role By Id");
     }

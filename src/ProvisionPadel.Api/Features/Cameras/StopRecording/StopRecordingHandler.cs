@@ -1,8 +1,6 @@
 ﻿namespace ProvisionPadel.Api.Features.Cameras.StopRecording;
 
-public record StopRecordingResult(string Content);
-
-public record StopRecordingCommand(int ChannelId) : ICommand<StopRecordingResult>;
+public record StopRecordingCommand(int ChannelId) : ICommand<Result<string>>;
 
 public class StopRecordingHandler
     (HikvisionHttpClient hikvisionHttpClient,
@@ -10,7 +8,7 @@ public class StopRecordingHandler
      IHikvisionService hikvisionService,
      ICameraService cameraService,
      IVideoService videoService
-    ) : ICommandHandler<StopRecordingCommand, StopRecordingResult>
+    ) : ICommandHandler<StopRecordingCommand, Result<string>>
 {
     private readonly HikvisionHttpClient _hikvisionHttpClient = hikvisionHttpClient;
     private readonly IHikvisionService _hikvisionService = hikvisionService;
@@ -18,38 +16,36 @@ public class StopRecordingHandler
     private readonly IVideoService _videoService = videoService;
     private readonly IApplicationDbContext _context = context;
 
-    public async Task<StopRecordingResult> Handle(StopRecordingCommand command, CancellationToken cancellationToken)
+    public async Task<Result<string>> Handle(StopRecordingCommand command, CancellationToken cancellationToken)
     {
         var url = $"/ISAPI/ContentMgmt/record/control/manual/stop/tracks/{command.ChannelId}";
 
         var response = await _hikvisionHttpClient.Client.PutAsync(url, null);
 
-        var httpStatusCodeResponse = response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+            return Result<string>.Failure(new Error(ErrorMessages.ErrorStopRecording));
 
-        await ChangeCameraStatus(command.ChannelId, httpStatusCodeResponse, cancellationToken);
+        await ChangeCameraStatus(command.ChannelId, cancellationToken);
 
-        return new StopRecordingResult(await response.Content.ReadAsStringAsync());
+        return Result<string>.Success(await response.Content.ReadAsStringAsync());
     }
 
-    private async Task ChangeCameraStatus(int channelId, HttpResponseMessage response, CancellationToken cancellationToken)
+    private async Task ChangeCameraStatus(int channelId, CancellationToken cancellationToken)
     {
-        if (response.IsSuccessStatusCode)
+        var camera = await _cameraService.StopCameraRecording(channelId, cancellationToken);
+
+        var video = await _context.Videos
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.CameraId == camera.Id && x.IsRecording == true);
+
+        if (video is not null)
         {
-            var camera = await _cameraService.StopCameraRecording(channelId, cancellationToken);
+            var stop = DateTime.Now;
 
-            var video = await _context.Videos
-                .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.CameraId == camera.Id && x.IsRecording == true);
+            var (endTime, size) = await _hikvisionService
+                .ExtractSizeAndEndTimeFromXml(channelId.ToString(), video.StartTime, stop.AddMinutes(-2));
 
-            if (video is not null)
-            {
-                var stop = DateTime.Now;
-
-                var (endTime, size) = await _hikvisionService
-                    .ExtractSizeAndEndTimeFromXml(channelId.ToString(), video.StartTime, stop.AddMinutes(-2));
-
-                await _videoService.Update(video.Name, endTime.ConvertToUtcDateTime(), size, cancellationToken);
-            }
+            await _videoService.Update(video.Name, endTime.ConvertToUtcDateTime(), size, cancellationToken);
         }
     }
 }
