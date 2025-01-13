@@ -20,6 +20,11 @@ public class GetAllRolesEndpoint : ICarterModule
         })
         .WithName("GetAllRoles")
         .Produces<GetAllRolesResponse>(StatusCodes.Status200OK)
-        .WithDescription("Get All Roles");
+        .WithDescription("Get All Roles")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Role, Access.View);
+        });
     }
 }

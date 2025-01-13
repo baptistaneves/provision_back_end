@@ -1,12 +1,7 @@
 ﻿global using ProvisionPadel.Api.Configurations.Interfaces;
 global using ProvisionPadel.Api.Extensions;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
-global using Microsoft.AspNetCore.Mvc.ApiExplorer;
 global using Microsoft.Extensions.Options;
-global using Microsoft.OpenApi.Models;
-global using Swashbuckle.AspNetCore.SwaggerGen;
-global using ProvisionPadel.Api.Options;
-global using Microsoft.AspNetCore.Mvc.Versioning;
 global using Microsoft.AspNetCore.Mvc;
 global using MediatR;
 global using Microsoft.EntityFrameworkCore;
@@ -43,3 +38,4 @@ global using FluentValidation.Results;
 global using ProvisionPadel.Api.Services.Requests;
 global using ProvisionPadel.Api.Services.Validators;
 global using Microsoft.AspNetCore.Authorization;
+global using ProvisionPadel.Api.Shared.Accesses;

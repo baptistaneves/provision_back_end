@@ -19,6 +19,11 @@ public class UpdateRoleEndpoint : BaseEndpoint, ICarterModule
         .WithName("UpdateRole")
         .Produces<bool>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithDescription("Update Role");
+        .WithDescription("Update Role")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Role, Access.ManageRole);
+        });
     }
 }

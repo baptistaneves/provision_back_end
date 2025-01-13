@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using ProvisionPadel.Api.Shared.Accesses;
 
 namespace ProvisionPadel.Api.Features.Cameras.StartRecording;
 
@@ -20,6 +21,11 @@ public class StartRecordingEndpoint : BaseEndpoint, ICarterModule
         .Produces<Result<string>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Start Recording")
-        .WithDescription("Start Recording");
+        .WithDescription("Start Recording")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Camera, Access.StartRecording);
+        });
     }
 }

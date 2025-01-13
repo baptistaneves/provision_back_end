@@ -17,8 +17,6 @@
           "MediatR": "12.4.1",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.10",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.10",
-          "Microsoft.AspNetCore.Mvc.Versioning": "5.1.0",
-          "Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer": "5.1.0",
           "Microsoft.CodeAnalysis.CSharp": "4.7.0",
           "Microsoft.CodeAnalysis.Common": "4.7.0",
           "Microsoft.EntityFrameworkCore": "8.0.10",
@@ -26,8 +24,7 @@
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.19.6",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.10",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
-          "Swashbuckle.AspNetCore": "6.9.0",
-          "Swashbuckle.AspNetCore.SwaggerGen": "6.9.0"
+          "Swashbuckle.AspNetCore": "6.9.0"
         },
         "runtime": {
           "ProvisionPadel.Api.dll": {}
@@ -197,25 +194,6 @@
           "lib/net8.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll": {
             "assemblyVersion": "8.0.10.0",
             "fileVersion": "8.0.1024.46804"
-          }
-        }
-      },
-      "Microsoft.AspNetCore.Mvc.Versioning/5.1.0": {
-        "runtime": {
-          "lib/net6.0/Microsoft.AspNetCore.Mvc.Versioning.dll": {
-            "assemblyVersion": "5.1.0.0",
-            "fileVersion": "5.1.8270.41513"
-          }
-        }
-      },
-      "Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer/5.1.0": {
-        "dependencies": {
-          "Microsoft.AspNetCore.Mvc.Versioning": "5.1.0"
-        },
-        "runtime": {
-          "lib/net6.0/Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer.dll": {
-            "assemblyVersion": "5.1.0.0",
-            "fileVersion": "5.1.8270.41534"
           }
         }
       },
@@ -1681,20 +1659,6 @@
       "sha512": "sha512-vMeY9F3Sq+AiZlquf84rwHOAQBS8nb8kd1RcuoXKPBhHNGBxMLYnr8/e/FCwu7kb14hH/rqWoEuyO4WXpAO6Rw==",
       "path": "microsoft.aspnetcore.identity.entityframeworkcore/8.0.10",
       "hashPath": "microsoft.aspnetcore.identity.entityframeworkcore.8.0.10.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.Mvc.Versioning/5.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-UX8w9BlCiZpr6Ox4YAve1w0CkI1CAovukGNzKd7v0+5pZc8lzuG5tRovucr1RWIKHs0E/Yx8563CN7KzaB3bpw==",
-      "path": "microsoft.aspnetcore.mvc.versioning/5.1.0",
-      "hashPath": "microsoft.aspnetcore.mvc.versioning.5.1.0.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer/5.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-p45pSXCJPbx+p9gFNNQPUC547KpqP5cRJke6aygq/M7UzCrJNmJNqD+65pIpY4muYbINqlgrC47h1oc0WbuP1g==",
-      "path": "microsoft.aspnetcore.mvc.versioning.apiexplorer/5.1.0",
-      "hashPath": "microsoft.aspnetcore.mvc.versioning.apiexplorer.5.1.0.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
       "type": "package",

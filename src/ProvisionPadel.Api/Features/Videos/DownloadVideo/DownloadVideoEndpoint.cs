@@ -19,10 +19,8 @@ public class DownloadVideoEndpoint : BaseEndpoint, ICarterModule
             if (!result.IsSuccess)
                 return Results.BadRequest(result.Error);
 
-            var videoStream = result.Adapt<DownloadVideoResponse>();
-
             var fileResult = Results.File(
-               fileContents: videoStream.Content,
+               fileContents: result.Value,
                contentType: "video/mp4",
                fileDownloadName: $"{request.Name}.mp4"
             );
@@ -30,7 +28,7 @@ public class DownloadVideoEndpoint : BaseEndpoint, ICarterModule
             return fileResult;
         })
         .WithName("DownloadVideo")
-        .Produces<DownloadVideoResponse>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Download Video")
         .WithDescription("Download Video");

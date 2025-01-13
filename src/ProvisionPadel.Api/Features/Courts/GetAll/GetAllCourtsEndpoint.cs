@@ -22,6 +22,11 @@ public class GetAllCourtsEndpoint : ICarterModule
         .Produces<GetAllCourtsReponse>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Get All Courts")
-        .WithDescription("Get All Courts");
+        .WithDescription("Get All Courts")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Court, Access.View);
+        });
     }
 }

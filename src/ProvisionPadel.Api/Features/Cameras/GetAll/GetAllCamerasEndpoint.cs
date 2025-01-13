@@ -17,6 +17,10 @@ public class GetAllCamerasEndpoint : ICarterModule
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Get All Cameras")
         .WithDescription("Get All Cameras")
-        .RequireAuthorization(policy => policy.RequireCustomClaim(Access.Camera, Access.View));
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Camera, Access.View);
+        });
     }
 }

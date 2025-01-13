@@ -15,6 +15,11 @@ public class LogoutConnectionEndpoint : ICarterModule
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Logout Connection")
-        .WithDescription("Logout Connection");
+        .WithDescription("Logout Connection")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Connection, Access.ManageConnections);
+        });
     }
 }

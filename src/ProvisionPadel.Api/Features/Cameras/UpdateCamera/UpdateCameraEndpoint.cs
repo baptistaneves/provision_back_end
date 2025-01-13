@@ -1,4 +1,6 @@
-﻿namespace ProvisionPadel.Api.Features.Cameras.UpdateCamera;
+﻿using ProvisionPadel.Api.Shared.Accesses;
+
+namespace ProvisionPadel.Api.Features.Cameras.UpdateCamera;
 
 public class UpdateCameraEndpoint : BaseEndpoint, ICarterModule
 {
@@ -15,6 +17,11 @@ public class UpdateCameraEndpoint : BaseEndpoint, ICarterModule
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Update Camera")
-        .WithDescription("Update Camera");
+        .WithDescription("Update Camera")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Camera, Access.ManageCamera);
+        });
     }
 }

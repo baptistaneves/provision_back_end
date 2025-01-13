@@ -19,6 +19,11 @@ public class UpdateUserEndpoint : BaseEndpoint, ICarterModule
         .WithName("UpdateUser")
         .Produces<Result<bool>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithDescription("Update User");
+        .WithDescription("Update User")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.User, Access.ManageUser);
+        });
     }
 }

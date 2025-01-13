@@ -19,6 +19,11 @@ public class CreateRoleEndpoint : BaseEndpoint, ICarterModule
         .WithName("CreateRole")
         .Produces<bool>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithDescription("Create Role");
+        .WithDescription("Create Role")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Role, Access.ManageRole);
+        });
     }
 }

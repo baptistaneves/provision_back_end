@@ -17,6 +17,11 @@ public class GetRoleByIdEndpoint : BaseEndpoint, ICarterModule
         .WithName("GetRoleById")
         .Produces<GetRoleByIdResult>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .WithDescription("Get Role By Id");
+        .WithDescription("Get Role By Id")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Role, Access.View);
+        });
     }
 }

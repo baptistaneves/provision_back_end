@@ -19,6 +19,11 @@ public class CreateAdminEndpoint : BaseEndpoint, ICarterModule
         .WithName("CreateUser")
         .Produces<Result<CreateUserResult>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
-        .WithDescription("Create User");
+        .WithDescription("Create User")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.User, Access.ManageUser);
+        });
     }
 }

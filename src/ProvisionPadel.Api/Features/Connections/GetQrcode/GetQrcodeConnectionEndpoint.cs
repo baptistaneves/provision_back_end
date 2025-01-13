@@ -15,6 +15,11 @@ public class GetQrcodeConnectionEndpoint : BaseEndpoint, ICarterModule
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Get Qrcode")
-        .WithDescription("Get Qrcode");
+        .WithDescription("Get Qrcode")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Connection, Access.ManageConnections);
+        });
     }
 }

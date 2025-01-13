@@ -1,4 +1,6 @@
-﻿namespace ProvisionPadel.Api.Features.Cameras.Remove;
+﻿using ProvisionPadel.Api.Shared.Accesses;
+
+namespace ProvisionPadel.Api.Features.Cameras.Remove;
 
 public class RemoveCameraEndpoint : BaseEndpoint, ICarterModule
 {
@@ -14,6 +16,11 @@ public class RemoveCameraEndpoint : BaseEndpoint, ICarterModule
        .Produces(StatusCodes.Status200OK)
        .ProducesProblem(StatusCodes.Status404NotFound)
        .WithSummary("Remove Camera")
-       .WithDescription("Remove Camera");
+       .WithDescription("Remove Camera")
+       .RequireAuthorization(options =>
+       {
+           options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+           options.RequireClaim(Access.Camera, Access.ManageCamera);
+       });
     }
 }

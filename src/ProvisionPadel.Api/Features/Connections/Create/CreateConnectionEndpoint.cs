@@ -16,6 +16,11 @@ public class CreateConnectionEndpoint : BaseEndpoint, ICarterModule
         .Produces<Result<bool>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Create connection")
-        .WithDescription("Create New Connection");
+        .WithDescription("Create New Connection")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Connection, Access.ManageConnections);
+        });
     }
 }

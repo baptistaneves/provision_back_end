@@ -14,6 +14,11 @@ public class GetAllConnectionsEndpoint : ICarterModule
         .Produces<IEnumerable<InstanceDto>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Get all connections")
-        .WithDescription("Get all connections");
+        .WithDescription("Get all connections")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Connection, Access.View);
+        });
     }
 }

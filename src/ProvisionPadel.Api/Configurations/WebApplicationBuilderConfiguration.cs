@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace ProvisionPadel.Api.Configurations;
+﻿namespace ProvisionPadel.Api.Configurations;
 
 public class WebApplicationBuilderConfiguration : IWebApplicationBuilderRegister
 {
@@ -45,20 +43,5 @@ public class WebApplicationBuilderConfiguration : IWebApplicationBuilderRegister
                               .AllowAnyMethod()
                               .WithExposedHeaders("Content-Disposition"));
         });
-
-        var apiVersioningBuilder = builder.Services.AddApiVersioning(config =>
-        {
-            config.DefaultApiVersion = new ApiVersion(1, 0);
-            config.AssumeDefaultVersionWhenUnspecified = true;
-            config.ReportApiVersions = true;
-            config.ApiVersionReader = new UrlSegmentApiVersionReader();
-        });
-
-        apiVersioningBuilder.AddVersionedApiExplorer(config =>
-        {
-            config.GroupNameFormat = "'v'VVV";
-            config.SubstituteApiVersionInUrl = true;
-        });
-
     }
 }

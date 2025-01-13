@@ -18,6 +18,11 @@ public class GetAllUsersEndpoint : ICarterModule
         })
         .WithName("GetAllUsers")
         .Produces<GetAllUsersResponse>(StatusCodes.Status200OK)
-        .WithDescription("Get All Users");
+        .WithDescription("Get All Users")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.User, Access.View);
+        });
     }
 }

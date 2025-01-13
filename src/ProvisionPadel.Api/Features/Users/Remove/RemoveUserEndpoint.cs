@@ -14,6 +14,11 @@ public class RemoveUserEndpoint : BaseEndpoint, ICarterModule
          .Produces<Result<bool>>(StatusCodes.Status200OK)
          .ProducesProblem(StatusCodes.Status400BadRequest)
          .ProducesProblem(StatusCodes.Status404NotFound)
-         .WithDescription("Remove User");
+         .WithDescription("Remove User")
+         .RequireAuthorization(options =>
+         {
+             options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+             options.RequireClaim(Access.User, Access.ManageUser);
+         });
     }
 }

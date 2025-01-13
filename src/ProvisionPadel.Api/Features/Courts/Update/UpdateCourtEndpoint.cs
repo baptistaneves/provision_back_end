@@ -20,6 +20,11 @@ public class UpdateCourtEndpoint : BaseEndpoint, ICarterModule
         .Produces<Result<bool>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Update Court")
-        .WithDescription("Update Court");
+        .WithDescription("Update Court")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Court, Access.ManageCourt);
+        });
     }
 }

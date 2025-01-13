@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using ProvisionPadel.Api.Features.BaseEndpoints;
 
 namespace ProvisionPadel.Api.Features.Login;
 

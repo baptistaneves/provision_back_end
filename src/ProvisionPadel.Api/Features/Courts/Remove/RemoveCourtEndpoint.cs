@@ -18,6 +18,11 @@ public class RemoveCourtEndpoint : BaseEndpoint, ICarterModule
         .Produces<Result<bool>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Remove Court")
-        .WithDescription("Remove Court");
+        .WithDescription("Remove Court")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Court, Access.ManageCourt);
+        });
     }
 }

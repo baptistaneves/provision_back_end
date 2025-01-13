@@ -16,6 +16,11 @@ public class RemoveRoleEndpoint : BaseEndpoint, ICarterModule
         .Produces<Result<bool>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .ProducesProblem(StatusCodes.Status404NotFound)
-        .WithDescription("Remove Role");
+        .WithDescription("Remove Role")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Role, Access.ManageRole);
+        });
     }
 }

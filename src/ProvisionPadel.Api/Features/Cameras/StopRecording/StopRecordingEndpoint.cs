@@ -20,6 +20,11 @@ public class StopRecordingEndpoint : BaseEndpoint, ICarterModule
         .Produces<Result<string>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Stop Recording")
-        .WithDescription("Stop Recording");
+        .WithDescription("Stop Recording")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Camera, Access.StopRecording);
+        });
     }
 }

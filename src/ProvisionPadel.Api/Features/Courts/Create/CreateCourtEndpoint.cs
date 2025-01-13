@@ -22,6 +22,11 @@ public class CreateCourtEndpoint : BaseEndpoint, ICarterModule
         .Produces<Result<bool>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Create Court")
-        .WithDescription("Create Court");
+        .WithDescription("Create Court")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Court, Access.ManageCourt);
+        });
     }
 }

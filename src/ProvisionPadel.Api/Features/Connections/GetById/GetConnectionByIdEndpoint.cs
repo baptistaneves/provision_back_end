@@ -15,6 +15,11 @@ public class GetConnectionByIdEndpoint : BaseEndpoint, ICarterModule
         .ProducesProblem(StatusCodes.Status404NotFound)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Get connection by instance id")
-        .WithDescription("Get connection by instance id");
+        .WithDescription("Get connection by instance id")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Connection, Access.View);
+        });
     }
 }

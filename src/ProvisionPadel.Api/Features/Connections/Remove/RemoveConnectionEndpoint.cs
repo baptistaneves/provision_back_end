@@ -14,6 +14,11 @@ public class RemoveConnectionEndpoint : BaseEndpoint, ICarterModule
         .Produces<Result<bool>>(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Remove connection")
-        .WithDescription("Remove Connection");
+        .WithDescription("Remove Connection")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Connection, Access.ManageConnections);
+        });
     }
 }

@@ -14,6 +14,11 @@ public class GetAllVideosEndpoint : ICarterModule
         .Produces<IEnumerable<Video>>(StatusCodes.Status201Created)
         .ProducesProblem(StatusCodes.Status404NotFound)
         .WithSummary("Get All Videos")
-        .WithDescription("Get All Videos");
+        .WithDescription("Get All Videos")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Video, Access.View);
+        });
     }
 }
