@@ -2,11 +2,9 @@
 
 namespace ProvisionPadel.Api.Features.Bunnies.UploadVideo;
 
-public record UploadVideoResponse(bool IsSuccess);
+public record UploadVideoRequest(int ChannelId, string Name, string Size, DateTime StartTime, DateTime EndTime);
 
-public record UploadVideoRequest(string VideoName, Guid LibraryId);
-
-public class UploadVideoEndpoint : ICarterModule
+public class UploadVideoEndpoint : BaseEndpoint, ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -16,14 +14,17 @@ public class UploadVideoEndpoint : ICarterModule
 
             var result = await sender.Send(command);
 
-            var response = result.Adapt<UploadVideoResponse>();
-
-            return Results.Ok(response);
+            return Response(result);
         })
         .WithName("UploadVideo")
-        .Produces<UploadVideoResponse>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Upload Video")
-        .WithDescription("Upload new video");
+        .WithDescription("Upload new video")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Camera, Access.ManageCamera);
+        });
     }
 }

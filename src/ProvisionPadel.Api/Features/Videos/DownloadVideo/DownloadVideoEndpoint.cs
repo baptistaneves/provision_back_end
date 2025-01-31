@@ -20,7 +20,7 @@ public class DownloadVideoEndpoint : BaseEndpoint, ICarterModule
                 return Results.BadRequest(result.Error);
 
             var fileResult = Results.File(
-               fileContents: result.Value,
+               fileContents: result.Value!,
                contentType: "video/mp4",
                fileDownloadName: $"{request.Name}.mp4"
             );
@@ -31,6 +31,11 @@ public class DownloadVideoEndpoint : BaseEndpoint, ICarterModule
         .Produces(StatusCodes.Status200OK)
         .ProducesProblem(StatusCodes.Status400BadRequest)
         .WithSummary("Download Video")
-        .WithDescription("Download Video");
+        .WithDescription("Download Video")
+        .RequireAuthorization(options =>
+        {
+            options.AuthenticationSchemes = new[] { JwtBearerDefaults.AuthenticationScheme };
+            options.RequireClaim(Access.Video, Access.View);
+        });
     }
 }

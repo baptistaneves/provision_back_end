@@ -1,31 +1,25 @@
 ﻿namespace ProvisionPadel.Api.Features.Bunnies.UploadVideo;
-
-public record UploadVideoResult(bool IsSuccess);
-
-public record UploadVideoCommand(string VideoName, Guid LibraryId) : ICommand<UploadVideoResult>;
+public record UploadVideoCommand(int ChannelId, string Name, string Size, DateTime StartTime, DateTime EndTime) : ICommand<Result<bool>>;
 
 public class UploadVideoHandler
-    (IOptions<Fmpeg> ffmpeg,
-    IBunnyService bunnyService) : ICommandHandler<UploadVideoCommand, UploadVideoResult>
+    (IBunnyService bunnyService,
+    IHikvisionService hikvisionService) : ICommandHandler<UploadVideoCommand, Result<bool>>
 {
-    private readonly Fmpeg _ffmpeg = ffmpeg.Value;
     private readonly IBunnyService _bunnyservice = bunnyService;
+    private readonly IHikvisionService _hikvisionService  = hikvisionService;
 
-    public async Task<UploadVideoResult> Handle(UploadVideoCommand command, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Handle(UploadVideoCommand command, CancellationToken cancellationToken)
     {
-        var fileName = $"{command.VideoName}.mp4";
+        var result = await _hikvisionService
+            .DownloadVideo(command.ChannelId, command.Name, command.Size, command.StartTime, command.EndTime);
 
-        var filePath = Path.Combine(_ffmpeg.VideoDirectory, fileName);
+        if (!result.IsSuccess)
+            return Result<bool>.Failure(new Error("Erro ao baixar o video do equipamento de gravação"));
 
-        var videoData = await ConvertToBase64(filePath);
+        var videoData = result.Value;
 
-        var isSuccessfullyUploaded = await _bunnyservice.UploadVideo(fileName, videoData);
+        var isSuccessfullyUploaded = await _bunnyservice.UploadVideo(command.Name, videoData!);
 
-        return new UploadVideoResult(isSuccessfullyUploaded);
-    }
-
-    private async Task<byte[]> ConvertToBase64(string filePath)
-    {
-        return await File.ReadAllBytesAsync(filePath);
+        return Result<bool>.Success(isSuccessfullyUploaded);
     }
 }

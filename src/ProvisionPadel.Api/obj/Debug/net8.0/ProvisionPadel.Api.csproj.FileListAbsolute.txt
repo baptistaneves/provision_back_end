@@ -420,6 +420,8 @@ C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\Emgu.CV.dll
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\FFmpeg.AutoGen.dll
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\FluentValidation.dll
+C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\Humanizer.dll
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\Mapster.dll
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\Mapster.Core.dll
@@ -543,5 +545,3 @@ C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\obj\Debug\net8
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\obj\Debug\net8.0\ProvisionPadel.Api.pdb
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\obj\Debug\net8.0\ProvisionPadel.Api.genruntimeconfig.cache
 C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\obj\Debug\net8.0\ref\ProvisionPadel.Api.dll
-C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
-C:\Baptista Neves\ucall\provision_back_end\src\ProvisionPadel.Api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

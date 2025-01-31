@@ -1,31 +1,24 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿namespace ProvisionPadel.Api.Features.Videos.DownloadVideo;
 
-namespace ProvisionPadel.Api.Features.Videos.DownloadVideo;
-
-public record DownloadVideoResult();
 public record DownloadVideoCommand
-    (int ChannelId, string Name, string Size, DateTime StartTime, DateTime EndTime) : ICommand<Result<byte[] Content>>;
+    (int ChannelId, string Name, string Size, DateTime StartTime, DateTime EndTime) : ICommand<Result<byte[]>>;
 
 public class DownloadVideoHandler
-    (HikvisionHttpClient hikvisionHttpClient,
+    (IHikvisionService hikvisionService,
      INotifier notifier) : ICommandHandler<DownloadVideoCommand, Result<byte[]>>
 {
-    private readonly HikvisionHttpClient _hikvisionHttpClient = hikvisionHttpClient;
-    private readonly INotifier _notifier = notifier;
+    private readonly IHikvisionService _hikvisionService = hikvisionService;
+
     public async Task<Result<byte[]>> Handle(DownloadVideoCommand command, CancellationToken cancellationToken)
     {
-        var url = $"/ISAPI/ContentMgmt/download?playbackURI={_hikvisionHttpClient.Rtsp}/Streaming/tracks" +
-            $"/{command.ChannelId}/?starttime={command.StartTime}&amp;endtime={command.EndTime}&amp;name={command.Name}&amp;size={command.Size}";
+        var result = await _hikvisionService
+            .DownloadVideo(command.ChannelId, command.Name, command.Size, command.StartTime, command.EndTime);
 
-        var response = await _hikvisionHttpClient.Client.GetAsync(url);
+        if(!result.IsSuccess) 
+            return result;
 
-        if (!response.IsSuccessStatusCode)
-        {
-            return Result<byte[]>.Failure(new Error(ErrorMessages.ErrorDownloadingVideo));
-        }
+        var videoStream = result.Value;
 
-        var videoStream = await response.Content.ReadAsByteArrayAsync();
-
-        return Result<byte[]>.Success(videoStream);
+        return Result<byte[]>.Success(videoStream!);
     }
 }

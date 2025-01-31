@@ -1,4 +1,6 @@
-﻿namespace ProvisionPadel.Api.Services;
+﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace ProvisionPadel.Api.Services;
 
 public class HikvisionService(HikvisionHttpClient hikvisionHttpClient) : IHikvisionService
 {
@@ -7,6 +9,9 @@ public class HikvisionService(HikvisionHttpClient hikvisionHttpClient) : IHikvis
     public async Task<(string startTime, string name)> ExtractNameAndStartTimeFromXml(string trackID, DateTime startTime, DateTime endTime)
     {
         var playbackUri = await ExtractRtspFromXml(trackID, startTime, endTime);
+
+        if (playbackUri == null)
+            return (startTime: null, name: null);
 
         playbackUri = playbackUri.Replace("&amp;", "&");
 
@@ -23,6 +28,9 @@ public class HikvisionService(HikvisionHttpClient hikvisionHttpClient) : IHikvis
     public async Task<(string endTime, string size)> ExtractSizeAndEndTimeFromXml(string trackID, DateTime startTime, DateTime endTime)
     {
         var playbackUri = await ExtractRtspFromXml(trackID, startTime, endTime);
+
+        if (playbackUri == null)
+            return (startTime: null, name: null);
 
         playbackUri = playbackUri.Replace("&amp;", "&");
 
@@ -60,6 +68,22 @@ public class HikvisionService(HikvisionHttpClient hikvisionHttpClient) : IHikvis
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadAsStringAsync();
+    }
+
+    public async Task<Result<byte[]>> DownloadVideo(int channelId, string name, string size, DateTime startTime, DateTime endTime)
+    {
+        var url = $"/ISAPI/ContentMgmt/download?playbackURI={_hikvisionHttpClient.Rtsp}/Streaming/tracks" +
+        $"/{channelId}/?starttime={startTime}&amp;endtime={endTime}&amp;name={name}&amp;size={size}";
+
+        var response = await _hikvisionHttpClient.Client.GetAsync(url);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result<byte[]>.Failure(new Error(ErrorMessages.ErrorDownloadingVideo));
+        }
+        var videoStream = await response.Content.ReadAsByteArrayAsync();
+
+        return Result<byte[]>.Success(videoStream);
     }
 }
 

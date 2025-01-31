@@ -1,4 +1,6 @@
-﻿namespace ProvisionPadel.Api.Features.Cameras.StopRecording;
+﻿using System.Xml.Linq;
+
+namespace ProvisionPadel.Api.Features.Cameras.StopRecording;
 
 public record StopRecordingCommand(int ChannelId) : ICommand<Result<string>>;
 
@@ -25,12 +27,15 @@ public class StopRecordingHandler
         if (!response.IsSuccessStatusCode)
             return Result<string>.Failure(new Error(ErrorMessages.ErrorStopRecording));
 
-        await ChangeCameraStatus(command.ChannelId, cancellationToken);
+        var result = await ChangeCameraStatus(command.ChannelId, cancellationToken);
+
+        if (!result.IsSuccess)
+            return Result<string>.Failure(result.Error!);
 
         return Result<string>.Success(await response.Content.ReadAsStringAsync());
     }
 
-    private async Task ChangeCameraStatus(int channelId, CancellationToken cancellationToken)
+    private async Task<Result<bool>> ChangeCameraStatus(int channelId, CancellationToken cancellationToken)
     {
         var camera = await _cameraService.StopCameraRecording(channelId, cancellationToken);
 
@@ -45,7 +50,12 @@ public class StopRecordingHandler
             var (endTime, size) = await _hikvisionService
                 .ExtractSizeAndEndTimeFromXml(channelId.ToString(), video.StartTime, stop.AddMinutes(-2));
 
+            if (endTime == null && size == null)
+                return Result<bool>.Failure(new Error(ErrorMessages.ErrorStopRecording));
+
             await _videoService.Update(video.Name, endTime.ConvertToUtcDateTime(), size, cancellationToken);
         }
+
+        return Result<bool>.Success(true);
     }
 }

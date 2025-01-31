@@ -52,6 +52,9 @@ public class StartRecordingHandler
         var (startTime, name) = await _hikvisionService
             .ExtractNameAndStartTimeFromXml(channelId.ToString(), start.AddMinutes(-2), DateTime.Now.AddMinutes(1));
 
+        if(startTime == null && name == null)
+            return Result<bool>.Failure(new Error(ErrorMessages.ErrorStartingRecord));
+
         var camera = await _cameraService.StartCameraRecording(channelId, cancellationToken);
 
         if (camera is null)
